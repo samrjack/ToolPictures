@@ -1,0 +1,670 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     29131,        662]
+NotebookOptionsPosition[     28188,        624]
+NotebookOutlinePosition[     28530,        639]
+CellTagsIndexPosition[     28487,        636]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Final Project - Face of Tools", "Title",
+ CellChangeTimes->{{3.703333673267111*^9, 3.7033336911081276`*^9}}],
+
+Cell["By: Samuel Jackson and Joesph Le Roy", "Text",
+ CellChangeTimes->{{3.703333701149907*^9, 3.7033337147458467`*^9}, {
+  3.7033395796699524`*^9, 3.703339580060607*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Directory Variables", "Section",
+ CellChangeTimes->{{3.703333644264527*^9, 3.703333649369079*^9}}],
+
+Cell["\<\
+For this project, you must have a directory containing the pictures of tools, \
+and you must also specify the path for an image. Please adjust the path to \
+these directories below in order for this code to work. The \
+\[OpenCurlyDoubleQuote]fileName\[CloseCurlyDoubleQuote] path should be the \
+image that you wish to create a mosaic of. We encourage you to to set it to \
+any image you wish. Please also allow anywhere from 1 to 20 minutes for the \
+code to run, depending on the size of the image. Typically, a smaller image \
+will only take a few minutes to run. When the project is done running, you \
+will have the completed image saved to the same directory that your fileName \
+image is saved.
+
+As an added bonus, you don\[CloseCurlyQuote]t need to technically use tools \
+to create the mosaic. In fact, your \[OpenCurlyDoubleQuote]tooldir\
+\[CloseCurlyDoubleQuote] directory can contain technically any image. Indeed, \
+you could make Albert Einstein out of fish!\
+\>", "Text",
+ CellChangeTimes->{{3.7033396170333157`*^9, 3.7033397767378488`*^9}, {
+  3.7033398130073447`*^9, 3.7033399417425857`*^9}, {3.703339993232466*^9, 
+  3.703340011484412*^9}, {3.703340050351307*^9, 3.7033400935411835`*^9}, {
+  3.7033401929704785`*^9, 3.703340371083736*^9}, {3.703340410399637*^9, 
+  3.7033404562845993`*^9}, {3.7033411063341494`*^9, 3.703341107240497*^9}, {
+  3.703341160202997*^9, 3.703341193826972*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "tooldir", "=", 
+   "\"\<\\\\\\\\wfs1\\\\users$\\\\samuelj\\\\My \
+Documents\\\\533\\\\tools\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "fileName", "=", 
+   "\"\<\\\\\\\\wfs1\\\\users$\\\\samuelj\\\\My \
+Documents\\\\533\\\\Images\>\""}], ";"}]}], "Input",
+ CellChangeTimes->{{3.703298735002183*^9, 3.703298812606143*^9}, 
+   3.7033322362853966`*^9, {3.7033344151591806`*^9, 3.703334421716917*^9}, {
+   3.7033344915442553`*^9, 3.70333449870138*^9}, {3.7033345344002333`*^9, 
+   3.7033345530001245`*^9}, {3.7033345849006257`*^9, 
+   3.7033345865100327`*^9}, {3.7033401038079033`*^9, 3.703340120712946*^9}, {
+   3.703340181125593*^9, 3.703340182125699*^9}, {3.703340459613062*^9, 
+   3.703340462363372*^9}, {3.7033408910018005`*^9, 3.703340892251934*^9}, {
+   3.7179611894847193`*^9, 3.7179612000485983`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Code", "Section",
+ CellChangeTimes->{{3.703333637276183*^9, 3.70333363825568*^9}}],
+
+Cell["\<\
+Below is the code for our imgReplace function - the function that creates the \
+tool mosaic. Every step of the process should be detailed in the comments.\
+\>", "Text",
+ CellChangeTimes->{{3.703332242113655*^9, 3.703332245287267*^9}, {
+  3.703341234090081*^9, 3.7033412828216653`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"imgReplace", "[", 
+   RowBox[{"toolDir_", ",", "imgPath_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "toolFiles", ",", "Tools", ",", "segmentImage", ",", "makeImage", ",", 
+      "inputImage"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Import", " ", "image", " ", "and", " ", 
+      RowBox[{"tools", ".", " ", "Make"}], " ", "sure", " ", "image", " ", 
+      "has", " ", "an", " ", "alpha", " ", 
+      RowBox[{"channel", "."}]}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"inputImage", "=", 
+      RowBox[{"SetAlphaChannel", "[", 
+       RowBox[{"Import", "[", "imgPath", "]"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"toolFiles", "=", 
+      RowBox[{"FileNames", "[", 
+       RowBox[{"toolDir", "<>", "\"\<\\\\*.jpg\>\""}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Tools", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Import", "[", "#", "]"}], "&"}], "/@", "toolFiles"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"Break", " ", "image", " ", "into", " ", "segments"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"segmentImage", "[", 
+       RowBox[{"img_", ",", "pass_"}], "]"}], ":=", 
+      RowBox[{"Module", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"inputImageLowpass", ",", "inputImageGradient"}], "}"}], ",",
+         "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"inputImageLowpass", " ", "=", " ", 
+          RowBox[{"LowpassFilter", "[", 
+           RowBox[{"img", ",", "pass"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"inputImageGradient", " ", "=", " ", 
+          RowBox[{
+           RowBox[{"GradientFilter", "[", 
+            RowBox[{"inputImageLowpass", ",", "1"}], "]"}], "//", 
+           "ImageAdjust"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"WatershedComponents", "[", 
+          RowBox[{"inputImageGradient", ",", " ", 
+           RowBox[{"Method", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\"\<MinimumSaliency\>\"", ",", "0.13"}], "}"}]}]}], 
+          "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{"Main", " ", "processing", " ", 
+        RowBox[{"function", ".", " ", "Takes"}], " ", "in", " ", "a", " ", 
+        "set", " ", "of", " ", "building", " ", "images", " ", "and", " ", 
+        "an", " ", "image"}], ",", " ", 
+       RowBox[{
+       "and", " ", "a", " ", "prefered", " ", "segmentation", " ", "of", " ", 
+        "that", " ", "image", " ", "to", " ", "produce", " ", "a", " ", "new",
+         " ", "image", " ", "filled", " ", "with", " ", "a", " ", "set", " ", 
+        "of", " ", "the", " ", "building", " ", 
+        RowBox[{"images", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"makeImage", "[", 
+       RowBox[{"image_", ",", "rawSeg_", ",", "rawTools_"}], "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+         "processTool", ",", "\[IndentingNewLine]", "toolbin", ",", 
+          "maskImage", ",", "tools", ",", "defVec", ",", "nearestTool", ",", 
+          "\[IndentingNewLine]", "thresh", ",", "seg", ",", "segLen", ",", 
+          "\[IndentingNewLine]", "finTools", ",", "\[IndentingNewLine]", 
+          "blankImg"}], "}"}], ",", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "Takes", " ", "in", " ", "data", " ", "about", " ", "a", " ", 
+          "segment", " ", "and", " ", "uses", " ", "it", " ", "to", " ", 
+          "change", " ", "the", " ", "input", " ", "tool", " ", "to", " ", 
+          "match", " ", "as", " ", "close", " ", "as", " ", "possible"}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"processTool", "[", 
+           RowBox[{"inputTool_", ",", 
+            RowBox[{"{", 
+             RowBox[{
+             "ar_", ",", "angle_", ",", "shapeMask_", ",", "imgMask_", ",", 
+              "cent_"}], "}"}]}], "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"edit", ",", " ", "shift"}], "}"}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{
+             "Edit", " ", "is", " ", "responsible", " ", "for", " ", "size", 
+              " ", "and", " ", "rotation", " ", "of", " ", "tool"}], "*)"}], 
+            "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"edit", "[", 
+               RowBox[{"tool_", ",", 
+                RowBox[{"{", 
+                 RowBox[{"area_", ",", "ang_", ",", "shape_"}], "}"}]}], 
+               "]"}], ":=", " ", 
+              RowBox[{"Module", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                 "orgSize", ",", "larger", ",", "rot1", ",", "rot2", ",", 
+                  "diff1", ",", "diff2", ",", "rot"}], "}"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"orgSize", "=", 
+                  RowBox[{"1", "/.", 
+                   RowBox[{"ComponentMeasurements", "[", 
+                    RowBox[{
+                    RowBox[{"Binarize", "[", 
+                    RowBox[{"tool", ",", ".1"}], "]"}], ",", "\"\<Area\>\""}],
+                     "]"}]}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"larger", "=", 
+                  RowBox[{"ImageResize", "[", 
+                   RowBox[{"tool", ",", 
+                    RowBox[{"ImageDimensions", "[", "imgMask", "]"}]}], 
+                   "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                  "Rotates", " ", "the", " ", "tool", " ", "to", " ", "match",
+                    " ", "the", " ", 
+                   RowBox[{"segment", "'"}], "s", " ", "major", " ", 
+                   RowBox[{"axis", ".", " ", "Tests"}], " ", "both", " ", 
+                   "rotation", " ", "drections", " ", "and", " ", "uses", " ",
+                    "best"}], "*)"}], "\[IndentingNewLine]", 
+                 RowBox[{"rot1", "=", 
+                  RowBox[{"ImageRotate", "[", 
+                   RowBox[{"larger", ",", 
+                    RowBox[{"ang", "-", 
+                    RowBox[{"(", 
+                    RowBox[{"1", "/.", 
+                    RowBox[{"ComponentMeasurements", "[", 
+                    RowBox[{
+                    RowBox[{"Binarize", "[", 
+                    RowBox[{"larger", ",", ".1"}], "]"}], ",", 
+                    "\"\<Orientation\>\""}], "]"}]}], ")"}]}]}], "]"}]}], ";",
+                  "\[IndentingNewLine]", 
+                 RowBox[{"rot2", "=", 
+                  RowBox[{"ImageRotate", "[", 
+                   RowBox[{"rot1", ",", "Pi"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"diff1", "=", 
+                  RowBox[{"Total", "[", 
+                   RowBox[{
+                    RowBox[{"ImageData", "[", 
+                    RowBox[{"ImageMultiply", "[", 
+                    RowBox[{"shape", ",", 
+                    RowBox[{"ImageResize", "[", 
+                    RowBox[{"rot1", ",", 
+                    RowBox[{"ImageDimensions", "[", "shape", "]"}]}], "]"}]}],
+                     "]"}], "]"}], ",", "Infinity"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"diff2", "=", 
+                  RowBox[{"Total", "[", 
+                   RowBox[{
+                    RowBox[{"ImageData", "[", 
+                    RowBox[{"ImageMultiply", "[", 
+                    RowBox[{"shape", ",", 
+                    RowBox[{"ImageResize", "[", 
+                    RowBox[{"rot2", ",", 
+                    RowBox[{"ImageDimensions", "[", "shape", "]"}]}], "]"}]}],
+                     "]"}], "]"}], ",", "Infinity"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"rot", "=", 
+                  RowBox[{"If", "[", 
+                   RowBox[{
+                    RowBox[{"diff1", "<", "diff2"}], ",", "rot1", ",", 
+                    "rot2"}], "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
+             ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Shift", " ", "is", " ", "responsible", " ", "for", " ", 
+               "color", " ", "variation", " ", "of", " ", "tool"}], "*)"}], 
+             "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"shift", "[", 
+               RowBox[{"tool_", ",", "img_"}], "]"}], ":=", 
+              RowBox[{"Module", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"clean", ",", "coeff"}], "}"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"(*", 
+                 RowBox[{
+                 "Removes", " ", "pixels", " ", "with", " ", "no", " ", 
+                  "alpha", " ", "channel"}], "*)"}], "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"clean", "[", "in_", "]"}], ":=", 
+                  RowBox[{"DeleteCases", "[", 
+                   RowBox[{
+                    RowBox[{"Flatten", "[", 
+                    RowBox[{
+                    RowBox[{"ImageData", "[", "in", "]"}], ",", "1"}], "]"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"_", ",", "_", ",", "_", ",", "0."}], "}"}]}], 
+                   "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"coeff", "=", 
+                  RowBox[{
+                   RowBox[{"Mean", "[", 
+                    RowBox[{"clean", "[", "img", "]"}], "]"}], "/", 
+                   RowBox[{"Mean", "[", 
+                    RowBox[{"clean", "[", "tool", "]"}], "]"}]}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"ImageApply", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"#", "*", "coeff"}], "&"}], ",", "tool"}], 
+                  "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+             "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"shift", "[", 
+                RowBox[{
+                 RowBox[{"edit", "[", 
+                  RowBox[{"inputTool", ",", 
+                   RowBox[{"{", 
+                    RowBox[{"ar", ",", "angle", ",", "shapeMask"}], "}"}]}], 
+                  "]"}], ",", "imgMask"}], "]"}], ",", "cent"}], "}"}]}]}], 
+           "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{"tool", " ", "prep", " ", "functions"}], "*)"}], 
+         "\[IndentingNewLine]", 
+         RowBox[{"toolbin", ":=", 
+          RowBox[{"Map", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"SelectComponents", "[", 
+              RowBox[{
+               RowBox[{"Binarize", "[", 
+                RowBox[{
+                 RowBox[{"ColorNegate", "[", "#", "]"}], ",", ".1"}], "]"}], 
+               ",", "\"\<Count\>\"", ",", 
+               RowBox[{"-", "1"}]}], "]"}], "&"}], ",", "rawTools"}], "]"}]}],
+          ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"maskImage", "[", 
+           RowBox[{"img_", ",", "mask_"}], "]"}], ":=", 
+          RowBox[{"SetAlphaChannel", "[", 
+           RowBox[{
+            RowBox[{"ImageMultiply", "[", 
+             RowBox[{"img", ",", "mask"}], "]"}], ",", "mask"}], "]"}]}], ";",
+          "\[IndentingNewLine]", 
+         RowBox[{"tools", ":=", 
+          RowBox[{"Map", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Apply", "[", 
+              RowBox[{"maskImage", ",", "#"}], "]"}], "&"}], ",", 
+            RowBox[{"Transpose", "[", 
+             RowBox[{"{", 
+              RowBox[{"rawTools", ",", "toolbin"}], "}"}], "]"}]}], "]"}]}], 
+         ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "Vector", " ", "for", " ", "the", " ", "feature", " ", "vector"}], 
+          "*)"}], "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"defVec", "[", "tool_", "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", "comp", "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"comp", "=", 
+              RowBox[{"1", "/.", 
+               RowBox[{"ComponentMeasurements", "[", 
+                RowBox[{"tool", ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                  "\"\<Area\>\"", ",", "\"\<BoundingBoxArea\>\"", ",", 
+                   "\"\<Elongation\>\""}], "}"}]}], "]"}]}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"comp", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "/", 
+                RowBox[{"comp", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+               RowBox[{"comp", "[", 
+                RowBox[{"[", "3", "]"}], "]"}]}], "}"}]}]}], 
+           "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "Define", " ", "feature", " ", "vector", " ", "to", " ", "return", 
+           " ", "best", " ", "matching", " ", "tool"}], "*)"}], 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+           RowBox[{"For", " ", "our", " ", "vector"}], ",", " ", 
+           RowBox[{"we", " ", "used", " ", "two", " ", 
+            RowBox[{"values", ":", " ", 
+             RowBox[{
+             "The", " ", "elongation", " ", "of", " ", "the", " ", 
+              "segment"}]}]}], ",", " ", 
+           RowBox[{
+           "and", " ", "the", " ", "\"\<density\>\"", " ", "which", " ", 
+            "was", " ", "caculated", " ", "by", " ", "taking", " ", "the", 
+            " ", "acual", " ", "pixel", " ", "area", " ", "divided", " ", 
+            "by", " ", "the", " ", "bounding", " ", "box", " ", 
+            RowBox[{"area", ".", " ", "This"}], " ", "way", " ", "we", " ", 
+            "can", " ", "get", " ", "tools", " ", "of", " ", "the", " ", 
+            "same", " ", "length", " ", "and", " ", "closer", " ", "in", " ", 
+            RowBox[{"shape", ".", " ", "Though"}], " ", "it", " ", 
+            RowBox[{"isn", "'"}], "t", " ", "perfect"}], ",", " ", 
+           RowBox[{
+           "for", " ", "most", " ", "segments", " ", "it", " ", "works", " ", 
+            "quite", " ", 
+            RowBox[{"well", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"nearestTool", "=", 
+          RowBox[{"Nearest", "[", 
+           RowBox[{"Map", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"defVec", "[", "#", "]"}], "\[Rule]", "#"}], "&"}], 
+             ",", "tools"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{"Prepare", " ", 
+           RowBox[{"segments", ".", " ", "Can"}], " ", "eliminate", " ", 
+           "segments", " ", "that", " ", "are", " ", "too", " ", 
+           RowBox[{"small", "."}]}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"thresh", "=", "0"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"seg", "=", 
+          RowBox[{"SelectComponents", "[", 
+           RowBox[{"rawSeg", ",", 
+            RowBox[{
+             RowBox[{"#Count", ">", "thresh"}], "&"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"segLen", ":=", 
+          RowBox[{"Max", "[", "seg", "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "Blank", " ", "canvas", " ", "to", " ", "place", " ", "tools", " ", 
+           "on"}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"blankImg", "=", 
+          RowBox[{"SetAlphaChannel", "[", 
+           RowBox[{
+            RowBox[{"Image", "[", 
+             RowBox[{"ConstantArray", "[", 
+              RowBox[{"0", ",", 
+               RowBox[{"Reverse", "[", 
+                RowBox[{"ImageDimensions", "[", "image", "]"}], "]"}]}], 
+              "]"}], "]"}], ",", "0"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "Fold", " ", "all", " ", "the", " ", "tools", " ", "onto", " ", 
+           "the", " ", "canvas", " ", "after", " ", "applying", " ", "the", 
+           " ", "proper", " ", "function", " ", "tothem", " ", "and", " ", 
+           "making", " ", "sure", " ", 
+           RowBox[{"they", "'"}], "re", " ", "in", " ", 
+           RowBox[{"order", "."}]}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"Fold", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Apply", "[", 
+             RowBox[{"ImageCompose", ",", 
+              RowBox[{"Flatten", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"#1", ",", 
+                  RowBox[{"processTool", "[", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"nearestTool", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "/", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "3", "]"}], "]"}]}], "}"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "4", "]"}], "]"}], ",", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "5", "]"}], "]"}], ",", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "6", "]"}], "]"}], ",", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", "7", "]"}], "]"}]}], "}"}]}], "]"}]}], "}"}],
+                 ",", "1"}], "]"}]}], "]"}], "&"}], ",", 
+           "\[IndentingNewLine]", "blankImg", ",", "\[IndentingNewLine]", 
+           RowBox[{"Reverse", "[", 
+            RowBox[{"Sort", "[", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"Range", "[", "segLen", "]"}], "/.", 
+               RowBox[{"ComponentMeasurements", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"image", ",", "seg"}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                  "\"\<Area\>\"", ",", "\"\<BoundingBoxArea\>\"", ",", 
+                   "\"\<Elongation\>\"", ",", "\"\<Orientation\>\"", ",", 
+                   "\"\<Shape\>\"", ",", "\"\<MaskedImage\>\"", ",", 
+                   "\"\<Centroid\>\""}], "}"}]}], "]"}]}], ")"}], "]"}], 
+            "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+      "Run", " ", "the", " ", "above", " ", "on", " ", "the", " ", "function",
+        " ", "with", " ", "several", " ", "different", " ", "segmentations", 
+       " ", "to", " ", "fill", " ", "in", " ", "gaps", " ", "then", " ", 
+       "combine", " ", "all", " ", "the", " ", "images", " ", "together", " ",
+        "and", " ", "export", " ", "to", " ", "png", " ", "file"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"Export", "[", 
+      RowBox[{
+       RowBox[{"imgPath", "<>", "\"\<.png\>\""}], ",", 
+       RowBox[{"Fold", "[", 
+        RowBox[{"ImageCompose", ",", 
+         RowBox[{"Parallelize", "[", 
+          RowBox[{"Map", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"makeImage", "[", 
+              RowBox[{"inputImage", ",", 
+               RowBox[{"segmentImage", "[", 
+                RowBox[{"inputImage", ",", "#"}], "]"}], ",", "Tools"}], 
+              "]"}], "&"}], ",", 
+            RowBox[{"{", 
+             RowBox[{".01", ",", ".2", ",", ".4", ",", ".5"}], "}"}]}], "]"}],
+           "]"}]}], "]"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.703296881663117*^9, 3.7032970763886237`*^9}, {
+   3.703297118531802*^9, 3.7032972235116053`*^9}, {3.703297256360465*^9, 
+   3.7032973158756537`*^9}, {3.7032975353380504`*^9, 
+   3.7032975744474363`*^9}, {3.703298821871967*^9, 3.703298822341709*^9}, {
+   3.703298857637781*^9, 3.703298860674489*^9}, {3.703299027715331*^9, 
+   3.703299039432266*^9}, {3.703299770437049*^9, 3.7032997710379877`*^9}, {
+   3.703324311833951*^9, 3.703324328187586*^9}, {3.7033244822380743`*^9, 
+   3.7033244992730627`*^9}, {3.703332223861213*^9, 3.703332229610032*^9}, {
+   3.7033323130454187`*^9, 3.703332430715418*^9}, {3.7033325084290776`*^9, 
+   3.703332510941429*^9}, {3.7033325490307803`*^9, 3.703332580505831*^9}, {
+   3.70333272485151*^9, 3.703332751930854*^9}, {3.7033328215264025`*^9, 
+   3.7033328705470705`*^9}, {3.703332912477641*^9, 3.703332968268228*^9}, {
+   3.7033330275003257`*^9, 3.7033332272944193`*^9}, {3.7033332589472284`*^9, 
+   3.7033332782789507`*^9}, {3.7033333098382072`*^9, 3.7033333926749544`*^9}, 
+   3.7033348903475866`*^9, {3.7033350809484696`*^9, 3.703335101759457*^9}, {
+   3.703335154931219*^9, 3.7033351615725594`*^9}, {3.7033382442400064`*^9, 
+   3.7033382457245502`*^9}, {3.703339515258686*^9, 3.703339516337284*^9}, {
+   3.7033405356472397`*^9, 3.7033406400478535`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Code to run", "Section",
+ CellChangeTimes->{{3.703339980809267*^9, 3.7033399839658566`*^9}, {
+  3.7033412975743084`*^9, 3.7033413008591595`*^9}}],
+
+Cell["\<\
+Below is the imgReplace function - you should only run this after setting up \
+your directory paths.\
+\>", "Text",
+ CellChangeTimes->{{3.703341307841699*^9, 3.7033413386269836`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"imgReplace", "[", 
+  RowBox[{"tooldir", ",", "fileName"}], "]"}]], "Input",
+ CellChangeTimes->{{3.7032988728279643`*^9, 3.703298903131328*^9}, {
+   3.703298937454264*^9, 3.7032989833871975`*^9}, {3.7032998742989564`*^9, 
+   3.7032999179776735`*^9}, {3.7033245120924916`*^9, 3.703324514702797*^9}, {
+   3.7033245460661345`*^9, 3.7033245567161846`*^9}, 3.70332459132143*^9, {
+   3.703331812951129*^9, 3.703331813969796*^9}, {3.703334642804865*^9, 
+   3.703334682152645*^9}, {3.703334860459964*^9, 3.7033348728445244`*^9}, {
+   3.703335656715913*^9, 3.703335658309844*^9}, {3.7033360465515146`*^9, 
+   3.703336048411662*^9}, {3.7033367092247643`*^9, 3.7033367105219326`*^9}, {
+   3.7033373683489943`*^9, 3.7033373697085156`*^9}, {3.703337751112956*^9, 
+   3.7033377525349865`*^9}, {3.703338075064235*^9, 3.7033380771895733`*^9}, {
+   3.7033382323470955`*^9, 3.7033382341608157`*^9}, {3.7033395240991564`*^9, 
+   3.703339526100733*^9}, {3.7033401359277825`*^9, 3.703340150260665*^9}}],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\Joey\\\\Desktop\\\\tools\\\\images\\\\\
+einstein.jpg.png\"\>"], "Output",
+ CellChangeTimes->{3.7033414479163837`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Conclusion", "Section",
+ CellChangeTimes->{{3.7033419815900955`*^9, 3.7033419856217737`*^9}}],
+
+Cell["\<\
+We found that our algorithm works best on images with large amounts of high \
+frequency detail that our segmentation can easily detect. For example, human \
+hair typically looks amazing, since there are so many smaller details with \
+high contrast. However, when we applied our algorithm to more cartoony \
+characters (like Shrek), the segmentation was too large in certain sections, \
+and thus the original character could not be distinguished in the output \
+image. That said, most photographs of humans have enough details to create an \
+interesting mosaic where the original face is still distinguishable.
+
+Enjoy!\
+\>", "Text",
+ CellChangeTimes->{{3.7033419891118183`*^9, 3.703342176129328*^9}, {
+  3.7033422087690353`*^9, 3.703342228021296*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1904, 997},
+WindowMargins->{{11, Automatic}, {-9, Automatic}},
+FrontEndVersion->"10.2 for Microsoft Windows (64-bit) (July 7, 2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 114, 1, 101, "Title"],
+Cell[697, 25, 171, 2, 30, "Text"],
+Cell[CellGroupData[{
+Cell[893, 31, 104, 1, 70, "Section"],
+Cell[1000, 34, 1415, 22, 106, "Text"],
+Cell[2418, 58, 864, 18, 52, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3319, 81, 88, 1, 70, "Section"],
+Cell[3410, 84, 295, 5, 30, "Text"],
+Cell[3708, 91, 21976, 472, 1672, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25721, 568, 151, 2, 70, "Section"],
+Cell[25875, 572, 192, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[26092, 580, 1004, 14, 30, "Input"],
+Cell[27099, 596, 150, 2, 30, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27298, 604, 99, 1, 70, "Section"],
+Cell[27400, 607, 760, 13, 106, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
